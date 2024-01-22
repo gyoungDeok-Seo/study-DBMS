@@ -1,54 +1,68 @@
-# 전체 데이터베이스 조회
-show databases;
-
-# test 데이터베이스 사용
-use test;
-
-# 회원 테이블 생성
-create table tbl_member(
-    member_name varchar(255),
-    member_age int,
-    member_address varchar(255)
+CREATE TABLE TBL_MEMBER(
+	MEMBER_NAME VARCHAR2(255),
+	MEMBER_AGE NUMBER
 );
 
-# 현재 database에 생성된 테이블 전체 조회
-show tables;
+DROP TABLE TBL_MEMBER;
 
-# 테이블 삭제
-drop table tbl_member;
-
-/*
-    자동차 테이블 생성
-    1. 자동차 번호
-    2. 자동차 브랜드
-    3. 출시 날짜
-    4. 색상
-    5. 가격
-*/
-create table tbl_car(
-    number bigint primary key,
-    brand varchar(255),
-    release_date date,
-    color varchar(255),
-    price int
+-- 자동차 테이블 생성
+-- 자동차 번호
+-- 자동차 브랜드
+-- 출시날짜
+-- 색상
+-- 가격
+CREATE TABLE TBL_CAR(
+	ID NUMBER CONSTRAINT PK_CAR PRIMARY KEY,
+	CAR_BRAND VARCHAR2(255),
+	CAR_RELEASE_DATE DATE,
+	CAR_COLOR VARCHAR2(255),
+	CAR_PRICE NUMBER
 );
 
-show tables;
+DROP TABLE TBL_CAR;
 
-drop table tbl_car;
+ALTER TABLE TBL_CAR DROP CONSTRAINT PK_CAR;
+ALTER TABLE TBL_CAR ADD CONSTRAINT PK_CAR PRIMARY KEY(ID);
 
-/*
-    동물 테이블 생성
-    1. 번호
-    2. 종류
-    3. 먹이
-*/
-create table tbl_animal(
-    number bigint primary key,
-    type varchar(255) not null unique,
-    feed varchar(255)
+--동물 테이블 생성
+--	고유번호
+--	종류
+--	나이
+--	먹이
+CREATE TABLE TBL_ANIMAL(
+	ID NUMBER CONSTRAINT PK_ANIMAL PRIMARY KEY,
+	ANIMAL_TYPE VARCHAR2(255),
+	ANIMAL_AGE NUMBER,
+	ANIMAL_FEED NUMBER
 );
 
-show tables;
+-- 제약조건 추가(PK)
+ALTER TABLE TBL_ANIMAL ADD CONSTRAINT PK_ANIMAL PRIMARY KEY(ID);
 
-drop table tbl_animal;
+-- 제약조건 삭제(PK)
+ALTER TABLE TBL_ANIMAL DROP CONSTRAINT PK_ANIMAL;
+
+-- 컬럼 추가(성별)
+ALTER TABLE TBL_ANIMAL ADD(GENDER CHAR(1));
+
+-- 컬럼 이름 수정
+ALTER TABLE TBL_ANIMAL RENAME COLUMN ANIMAL_FEED TO ANIMAL_FEED_NAME;
+
+-- 컬럼 삭제
+ALTER TABLE TBL_ANIMAL DROP COLUMN GENDER;
+
+-- 컬럼 수정(자료형)
+ALTER TABLE TBL_ANIMAL MODIFY(ANIMAL_FEED_NAME VARCHAR2(255));
+
+-- 테이블 삭제
+DROP TABLE TBL_ANIMAL;
+
+CREATE TABLE TBL_STUDENT(
+	ID NUMBER CONSTRAINT PK_STUDENT PRIMARY KEY,
+	STUDENT_ID VARCHAR2(255) UNIQUE,
+	STUDENT_NAME VARCHAR2(255) NOT NULL,
+	STUDENT_MAJOR VARCHAR2(255) NOT NULL,
+	/*STUDENT_GENDER CHAR(1) DEFAULT 'N' CONSTRAINT BAN_GENDER CHECK(STUDENT_GENDER = 'M' OR STUDENT_GENDER = 'F'),*/
+	STUDENT_GENDER CHAR(1) DEFAULT 'N' CONSTRAINT BAN_GENDER CHECK(STUDENT_GENDER IN('M', 'F')),
+	STUDENT_BIRTH DATE CONSTRAINT BAN_DATE CHECK(STUDENT_BIRTH >= TO_DATE('1980-01-01', 'YYYY-MM-DD'))
+);
